@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: nginx
+spec:
+    selector:
+        matchLabels:
+            app: nginx
+            tier: backend
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: nginx
+                tier: backend
+        spec:
+            containers:
+            - name: nginx
+              image: nginx:1.7.9
+              resources:
+                  requests:
+                      cpu: 100m
+                      memory: 100Mi
+              ports:
+              - containerPort: 80
+              volumeMounts:
+              - name: shopware-persistent-storage
+                mountPath: /var/www/html
+              - name: nginx-config-volume
+                mountPath: /etc/nginx/nginx.conf
+                subPath: nginx.conf
+            volumes:
+            - name: shopware-persistent-storage
+              persistentVolumeClaim:
+                  claimName: sw-pv-claim
+            - name: nginx-config-volume
+              configMap:
+                  name: nginx-config

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: php-fpm
+spec:
+    selector:
+        matchLabels:
+            app: php-fpm
+            tier: backend
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: php-fpm
+                tier: backend
+        spec:
+            containers:
+            - name: php-fpm
+              image: php/7.2.11-fpm-stretch
+              resources:
+                  requests:
+                      cpu: 100m
+                      memory: 100Mi
+              ports:
+              - containerPort: 9000
+              volumeMounts:
+              - name: shopware-persistent-storage
+                mountPath: /var/www/html
+            volumes:
+            - name: shopware-persistent-storage
+              persistentVolumeClaim:
+                  claimName: sw-pv-claim
