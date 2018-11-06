@@ -16,7 +16,7 @@ spec:
         spec:
             containers:
             - name: php-fpm
-              image: php/7.2.11-fpm-stretch
+              image: php:7.2.11-fpm-stretch
               resources:
                   requests:
                       cpu: 100m
